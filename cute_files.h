@@ -206,13 +206,16 @@ static int cf_safe_strcpy_internal(char* dst, const char* src, int n, int max, c
 	{
 		if (n >= max)
 		{
-			if (!CUTE_FILES_DEBUG_CHECKS) break;
-			printf("ERROR: String \"%s\" too long to copy on line %d in file %s (max length of %d).\n"
-				, original
-				, line
-				, file
-				, max);
-			CUTE_FILES_ASSERT(0);
+			#if CUTE_FILES_DEBUG_CHECKS
+				printf("ERROR: String \"%s\" too long to copy on line %d in file %s (max length of %d).\n"
+					, original
+					, line
+					, file
+					, max);
+				CUTE_FILES_ASSERT(0);
+			#endif
+			if (max > 0) dst[max - 1] = 0;
+			return max;
 		}
 
 		c = *src++;
